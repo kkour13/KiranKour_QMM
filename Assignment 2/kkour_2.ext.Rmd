@@ -1,0 +1,82 @@
+---
+title: "Assignment 2"
+author: "Kiran Kour"
+date: "2022-09-23"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+#Getting required Packages
+
+```{r}
+#install.packages("lpSolve")
+#install.packages("knitr")
+#install.packages("tinytex")
+#tinytex::install_tinytex()
+library(tinytex)
+library(knitr)
+library(lpSolve)
+```
+
+#Objective Function is to maximize
+
+```{r}
+f.obj <- c(420,360,300,420,360,300,420,360,300)
+```
+
+#Constraints
+
+```{r}
+f.con <- matrix(c(1,1,1,0,0,0,0,0,0,
+                  0,0,0,1,1,1,0,0,0,
+                  0,0,0,0,0,0,1,1,1,
+                  20,15,12,0,0,0,0,0,0,
+                  0,0,0,20,15,12,0,0,0,
+                  0,0,0,0,0,0,20,15,12,
+                  1,0,0,1,0,0,1,0,0,
+                  0,1,0,0,1,0,0,1,0,
+                  0,0,1,0,0,1,0,0,1),nrow=9, byrow=TRUE)
+```
+
+#Directions of the inequalities
+
+```{r}
+f.dir <- c("<=",
+           "<=",
+           "<=",
+           "<=",
+           "<=",
+           "<=",
+           "<=",
+           "<=",
+           "<=")
+```
+
+#Right-hand side coefficients
+
+```{r}
+f.rhs <- c(750,
+           900,
+           450,
+           13000,
+           12000,
+           5000,
+           900,
+           1200,
+           750)
+```
+
+#Finding the value of Objective function
+
+```{r}
+lp("max",f.obj,f.con,f.dir,f.rhs)
+```
+#Finding the solution of the variables
+
+```{r}
+lp("max",f.obj,f.con,f.dir,f.rhs)$solution
+```
+
+
+                  
