@@ -1,0 +1,98 @@
+---
+title: "Assignment 6"
+author: "Kiran Kour"
+date: "2022-11-18"
+output:
+  html_document: default
+  word_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+***Question:***
+
+The manager wants to keep the total wage expenses as low as possible while ensuring that there are sufficient number of workers available each day. Formulate and solve the problem. What was the total cost? Howmany workers are available
+each day?
+
+Hint: The number of available workers each day can exceed, but can not be below the required amount.
+
+
+***Formulating the IP model and solving:***
+
+Let Xi be the number of workers under shifts i with specific salaries, where i= 1,2,3,4,5,6,7
+
+***Objective Function:***
+
+Min Z= 775x1 + 800x2 + 800x3 + 800x4 + 800x5 + 775x6 + 750x7
+
+***Subject to:***
+
+Sunday = x2 + x3 + x4 + x5 + x6 ≥ 18
+Monday = x3 + x4 + x5 + x6 + x7 ≥ 27
+Tuesday = x1 + x4 + x5 + x6 + x7 ≥ 22
+Wednesday = x1 + x2 + x5 + x6 + x7 ≥ 26
+Thursday = x1 + x2 + x3 + x6 + x7 ≥ 25
+Friday = x1 + x2 + x3 + x4 + x7 ≥ 21
+Saturday = x1 + x2 + x3 + x4 + x5 ≥ 19
+
+xi is enteger, for i = 1, 2, 3, 4, 5, 6, 7
+
+```{r}
+# Loading required Library
+library(lpSolveAPI)
+library(lpSolve)
+
+# Read the lp file
+IPModel <- read.lp("IP Model.lp")
+
+# See the file
+IPModel
+
+```
+
+```{r}
+# Running the lp model
+solve(IPModel)
+```
+Here we can see that the model is solving the problem.
+
+***Getting the Total Cost.***
+
+```{r}
+get.objective(IPModel)
+```
+In order to satisfy the minimum number of employees working per day, the minimum total salaries payed are $25,765 per week. In other words, the total salary’s cost per week is $25,675.
+
+***Getting the optimal number of variables (Workers)***
+
+```{r}
+get.variables(IPModel)
+```
+
+***• X1= There are 2 employees with the shift 1 schedule (having Sundays and Mondays off), which receive a salary of 775.
+
+• X2= There are 4 employees with the shift 2 schedule (having Mondays and Tuesdays off), which receive a salary of 800.
+
+• X3= There are 5 employees with the shift 3 schedule (having Tuesdays and Wednesdays off), which receive a salary of 800.
+
+• X4= There are 0 employed under this schedule.
+
+• X5= There are 8 employees with the shift 5 schedule (having Thursdays and Fridays off), which receive a salary of 800.
+
+• X6= There are 1 employee with the shift 6 schedule (having Fridays and Saturdays off), which receives a salary of 775.
+
+• X7= There are 13 employees under shift 7 schedule (having Saturdays and Sundays off), which receive a salary of 750.
+
+$25,675 in total.***
+
+
+***How many workers are available each day?***
+
+```{r}
+# See the constraints
+get.constraints(IPModel)
+```
+Here we can see the number of workers available per day. It also allow us to determine that the constraints are satisfied. Almost all days have the minimum required except Tuesdays and Wednesdays, which there are two extra people, and Fridays three more people.
